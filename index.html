@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Superheat Prediction Portal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #343a40;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    .container {
+      padding: 2rem;
+    }
+    .login, .form-section, .result-section, .admin-section {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 800px;
+      margin: 2rem auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input[type="text"], input[type="number"], input[type="password"], select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .result-section, .admin-section, #logoutBtn {
+      display: none;
+    }
+    #logoutBtn {
+      display: block;
+      margin: 1rem auto;
+      background-color: #dc3545;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AI Superheat Prediction Portal</h1>
+  </header>
+  <div class="container">
+    <div class="login">
+      <h2>Login</h2>
+      <select id="role">
+        <option value="user">User</option>
+        <option value="admin">Admin</option>
+      </select>
+      <input type="text" id="username" placeholder="Username">
+      <input type="password" id="password" placeholder="Password">
+      <button onclick="login()">Login</button>
+    </div>
+
+    <div class="form-section" id="formSection" style="display:none;">
+      <h3>Enter Steel Composition</h3>
+      <input type="number" id="C" placeholder="Carbon (C) - Weight %">
+      <input type="number" id="Si" placeholder="Silicon (Si) - Weight %">
+      <input type="number" id="Mn" placeholder="Manganese (Mn) - Weight %">
+      <input type="number" id="P" placeholder="Phosphorus (P) - Weight %">
+      <input type="number" id="S" placeholder="Sulfur (S) - Weight %">
+      <input type="number" id="delta" placeholder="Superheat Delta (°C)">
+      <input type="number" id="baseTemp" placeholder="Base Temperature (°C)">
+      <button onclick="calculateTemperatures()">Calculate</button>
+    </div>
+
+    <div class="result-section" id="resultSection">
+      <h3>Results</h3>
+      <p id="liquidusResult"></p>
+      <p id="superheatResult"></p>
+    </div>
+
+    <div class="admin-section" id="adminSection">
+      <h2>Admin Resources</h2>
+      <h3>AI-Enabled Superheat Prediction Model for Optimizing Steel Manufacturing Processes</h3>
+      <h4>1. The Business Prompt</h4>
+      <p>In the steel manufacturing industry, the superheat temperature is a critical parameter...</p>
+      <h4>2. Approach</h4>
+      <p>We adopted a data-driven machine learning approach...</p>
+      <h4>3. What Was Studied</h4>
+      <p>To design an effective prediction model, we first studied...</p>
+      <h4>4. Data Used (With Units)</h4>
+      <p>A synthetic dataset was constructed...</p>
+      <h4>5. Exploratory Data Analysis (EDA)</h4>
+      <p>The goal of EDA was to understand...</p>
+      <h4>6. Model Training and Testing</h4>
+      <p>The dataset was split into training and testing sets...</p>
+      <h4>7. Python Implementation (Liquidus and Superheat Calculator)</h4>
+      <pre><code>
+      def calculate_liquidus_temp(C, Si, Mn, P, S, base_temp):
+          delta_T = 80 * C + 6 * Si + 4 * Mn + 25 * P + 15 * S
+          return base_temp - delta_T
+
+      def calculate_superheat_temp(C, Si, Mn, P, S, base_temp, superheat_delta=30):
+          return calculate_liquidus_temp(C, Si, Mn, P, S, base_temp) + superheat_delta
+      </code></pre>
+      <h4>Conclusion</h4>
+      <p>
+        This AI-enabled model for predicting superheat temperature proves to be both reliable and efficient. By combining metallurgical insights with machine learning, it provides steelmakers with a tool to make informed, data-driven decisions. Improved accuracy in superheat prediction means better product quality, reduced rework, and more efficient energy usage.
+          Looking ahead, the model could be further enhanced by:
+          •	Integrating real-time sensor data for live predictions.
+          •	Adopting online learning techniques to update the model with new data.
+          •	Expanding the scope to include multi-objective optimization, such as minimizing energy while maximizing throughput.
+          Ultimately, this work demonstrates how AI can play a transformative role in modern steelmaking, aligning technology with metallurgical expertise to drive continuous improvement.</p>
+    </div>
+
+    <button id="logoutBtn" onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    function login() {
+      const role = document.getElementById("role").value;
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      if ((role === "admin" && username === "admin" && password === "admin123") ||
+          (role === "user" && username === "user" && password === "user123")) {
+        document.querySelector(".login").style.display = "none";
+        document.getElementById("formSection").style.display = "block";
+        document.getElementById("logoutBtn").style.display = "block";
+        if (role === "admin") {
+          document.getElementById("adminSection").style.display = "block";
+        }
+      } else {
+        alert("Invalid credentials!");
+      }
+    }
+
+    function logout() {
+      document.querySelector(".login").style.display = "block";
+      document.getElementById("formSection").style.display = "none";
+      document.getElementById("resultSection").style.display = "none";
+      document.getElementById("adminSection").style.display = "none";
+      document.getElementById("logoutBtn").style.display = "none";
+      document.getElementById("username").value = "";
+      document.getElementById("password").value = "";
+    }
+
+    function calculate_liquidus_temp(C, Si, Mn, P, S, base_temp) {
+      const delta_T = 80 * C + 6 * Si + 4 * Mn + 25 * P + 15 * S;
+      return base_temp - delta_T;
+    }
+
+    function calculate_superheat_temp(C, Si, Mn, P, S, base_temp, superheat_delta = 30) {
+      return calculate_liquidus_temp(C, Si, Mn, P, S, base_temp) + superheat_delta;
+    }
+
+    function calculateTemperatures() {
+      const C = parseFloat(document.getElementById("C").value);
+      const Si = parseFloat(document.getElementById("Si").value);
+      const Mn = parseFloat(document.getElementById("Mn").value);
+      const P = parseFloat(document.getElementById("P").value);
+      const S = parseFloat(document.getElementById("S").value);
+      const delta = parseFloat(document.getElementById("delta").value);
+      const baseTemp = parseFloat(document.getElementById("baseTemp").value);
+
+      if (isNaN(C) || isNaN(Si) || isNaN(Mn) || isNaN(P) || isNaN(S) || isNaN(delta) || isNaN(baseTemp)) {
+        alert("Please enter all values correctly.");
+        return;
+      }
+
+      const liquidus = calculate_liquidus_temp(C, Si, Mn, P, S, baseTemp);
+      const superheat = calculate_superheat_temp(C, Si, Mn, P, S, baseTemp, delta);
+
+      document.getElementById("liquidusResult").textContent = `Estimated Liquidus Temperature: ${liquidus.toFixed(2)} °C`;
+      document.getElementById("superheatResult").textContent = `Estimated Superheat Temperature: ${superheat.toFixed(2)} °C`;
+      document.getElementById("resultSection").style.display = "block";
+    }
+  </script>
+</body>
+</html>
